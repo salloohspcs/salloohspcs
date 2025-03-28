@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #222222;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    nav {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 20px 20px;
+      background-color: #121212;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      box-sizing: border-box;
+    }
+
+    .hamburger-menu {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 20px;
+    }
+
+    .hamburger-menu div {
+      background-color: white;
+      height: 4px;
+      width: 100%;
+      border-radius: 5px;
+    }
+
+    .side-menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 250px;
+      height: 100%;
+      background-color: #121212;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+      transform: translateX(100%);
+      transition: transform 0.3s ease-out;
+      padding: 30px;
+      will-change: transform;
+    }
+
+    .side-menu a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      font-size: 1.5rem;
+      margin: 20px 0;
+    }
+
+    .side-menu a:hover {
+      color: #ff6600;
+    }
+
+    .close-menu {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 2rem;
+      color: white;
+      cursor: pointer;
+    }
+
+    .side-menu.open {
+      transform: translateX(0);
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 100px 20px 20px;
+    }
+
+    .cart-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #333333;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid #444444;
+    }
+
+    .cart-item img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 5px;
+    }
+
+    .cart-item-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-left: 20px;
+    }
+
+    .cart-item-details h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #ff6600;
+    }
+
+    .cart-item-details p {
+      margin: 5px 0;
+      font-size: 1rem;
+    }
+
+    .cart-item-details span {
+      font-weight: bold;
+    }
+
+    .total-price {
+      text-align: right;
+      font-size: 1.5rem;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    button {
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .checkout {
+      background-color: #ff6600;
+    }
+
+    .checkout:hover {
+      background-color: #e55a00;
+    }
+
+    .clear-cart {
+      background-color: #cc0000;
+    }
+
+    .clear-cart:hover {
+      background-color: #990000;
+    }
+
+    .remove-item {
+      background-color: #cc0000;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .remove-item:hover {
+      background-color: #990000;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 40px;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-container">
+      <div class="hamburger-menu" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="side-menu" id="side-menu">
+        <span class="close-menu" onclick="toggleMenu()">×</span>
+        <a href="../../index.html">Home</a>
+        <a href="menu/about-us.html">About Us</a>
+        <a href="cart.html">Cart</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main-content">
+    <div class="cart-container">
+      <h1>Your Cart</h1>
+      <div id="cart-items">
+        <!-- Cart items will be injected here -->
+      </div>
+      <div class="total-price">
+        Total Price: <span id="total-price">0 SAR</span>
+      </div>
+
+      <div class="button-container">
+        <button class="checkout" id="checkout-btn">Proceed to Checkout</button>
+        <button class="clear-cart">Clear Cart</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Function to display items in the cart
+    function displayCart() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const cartItemsContainer = document.getElementById('cart-items');
+      const totalPriceElement = document.getElementById('total-price');
+      const checkoutBtn = document.getElementById('checkout-btn');
+      let totalPrice = 0;
+
+      // Clear the cart display before populating
+      cartItemsContainer.innerHTML = '';
+
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+        checkoutBtn.disabled = true;
+        checkoutBtn.style.opacity = '0.6';
+        checkoutBtn.style.cursor = 'not-allowed';
+        totalPriceElement.textContent = '0 SAR';
+        return;
+      } else {
+        checkoutBtn.disabled = false;
+        checkoutBtn.style.opacity = '1';
+        checkoutBtn.style.cursor = 'pointer';
+      }
+
+      // Display each item in the cart
+      cart.forEach((item, index) => {
+        const cartItemDiv = document.createElement('div');
+        cartItemDiv.classList.add('cart-item');
+        
+        const itemHTML = `
+          <img src="${item.image}" alt="${item.name}">
+          <div class="cart-item-details">
+            <h2>${item.name}</h2>
+            <p>${item.specs.join('<br>')}</p>
+            <span>Price: ${item.price}</span>
+            <button class="remove-item" onclick="removeItem(${index})">Remove</button>
+          </div>
+        `;
+
+        cartItemDiv.innerHTML = itemHTML;
+        cartItemsContainer.appendChild(cartItemDiv);
+
+        // Update total price
+        const itemPrice = parseFloat(item.price.replace(' SAR', '').replace(',', ''));
+        totalPrice += itemPrice;
+      });
+
+      // Display total price in cart
+      totalPriceElement.textContent = `${totalPrice} SAR`;
+    }
+
+    // Function to remove an item from the cart
+    function removeItem(index) {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.splice(index, 1); // Remove item at the given index
+      localStorage.setItem('cart', JSON.stringify(cart)); // Update cart in localStorage
+      displayCart(); // Refresh cart display
+    }
+
+    // Clear cart function
+    function clearCart() {
+      localStorage.removeItem('cart');
+      displayCart(); // Refresh cart display
+    }
+
+    // Function to handle checkout
+    function proceedToCheckout() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      if (cart.length === 0) {
+        alert('Your cart is empty. Please add items before checking out.');
+        return;
+      }
+      
+      // Save the cart items for checkout page
+      localStorage.setItem('checkoutCart', JSON.stringify(cart));
+      
+      // Redirect to buy.html
+      window.location.href = 'buy.html';
+    }
+
+    // Event listeners
+    document.querySelector('.clear-cart').addEventListener('click', clearCart);
+    document.getElementById('checkout-btn').addEventListener('click', proceedToCheckout);
+
+    // Function to toggle the side menu
+    function toggleMenu() {
+      const sideMenu = document.getElementById('side-menu');
+      sideMenu.classList.toggle('open');
+    }
+
+    // Initialize the cart display on page load
+    displayCart();
+  </script>
+</body>
+</html>
