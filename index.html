@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salloohs PCs</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #222222;
+      color: white;
+    }
+
+    /* Navigation bar */
+    nav {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 20px 20px; /* Increased top and bottom padding */
+      background-color: #121212;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      box-sizing: border-box;
+    }
+
+    /* Hamburger Menu Icon */
+    .hamburger-menu {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 20px;
+    }
+
+    .hamburger-menu div {
+      background-color: white;
+      height: 4px;
+      width: 100%;
+      border-radius: 5px;
+    }
+
+    /* Side menu */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 250px;
+      height: 100%;
+      background-color: #121212;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+      transform: translateX(100%); /* Initially off-screen */
+      transition: transform 0.3s ease-out; /* Smooth transition */
+      padding: 30px;
+      will-change: transform;
+    }
+
+    .side-menu a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      font-size: 1.5rem;
+      margin: 20px 0;
+    }
+
+    .side-menu a:hover {
+      color: #ff6600;
+    }
+
+    /* Close Button */
+    .close-btn {
+      background: none;
+      color: white;
+      border: none;
+      font-size: 2rem;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
+    }
+
+    /* Hero Section */
+    .hero {
+      background-image: url('https://i0.wp.com/minimalistboy.com/wp-content/uploads/2018/10/declutter-computer-dark-room.jpg?w=1280&ssl=1');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      padding: 80px 20px;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .hero p {
+      font-size: 1.5rem;
+      margin-top: 10px;
+    }
+
+    /* Main Content Section */
+    .main-content {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 40px;
+      margin-top: 100px;
+    }
+
+    /* PC Options */
+    .pc-option {
+      background-color: #333333;
+      border-radius: 12px;
+      width: 300px;
+      height: 400px;
+      text-align: center;
+      padding: 20px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
+      transition: transform 0.3s ease;
+    }
+
+    .pc-option:hover {
+      transform: scale(1.05);
+    }
+
+    .pc-option img {
+      width: 80%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .pc-option h3 {
+      font-size: 1.8rem;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .pc-option p {
+      font-size: 1rem;
+      margin-top: 10px;
+    }
+
+    /* Support Section */
+    .support-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      background-color: #333333;
+      margin-top: 40px;
+      border-radius: 12px;
+      text-align: center; /* Center-aligns text and button */
+    }
+
+    .support-section h2 {
+      font-size: 2rem;
+      color: white;
+      margin-bottom: 20px;
+    }
+
+    .support-section label {
+      font-size: 1.1rem;
+      margin-top: 10px;
+      color: white;
+    }
+
+    .support-section input, .support-section textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      background-color: #444444;
+      color: white;
+      font-size: 1rem;
+    }
+
+    .support-section textarea {
+      resize: vertical;
+      height: 150px; /* Expandable height */
+    }
+
+    /* Center the submit button */
+    .support-section button {
+      background-color: #ff6600;
+      color: white;
+      font-size: 1.1rem;
+      padding: 12px 25px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: block; /* Makes the button a block element */
+      margin-left: auto; /* Aligns the button to the center */
+      margin-right: auto; /* Aligns the button to the center */
+    }
+
+    .support-section button:hover {
+      background-color: #e65c00;
+    }
+
+    /* Footer Section */
+    footer {
+      background-color: #121212;
+      color: white;
+      text-align: center;
+      padding: 40px 0;
+      font-size: 1rem;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #ff6600;
+    }
+
+    /* PC Option Link */
+    .pc-option-link {
+      display: block;
+      color: white;
+      text-decoration: none;
+    }
+
+    .pc-option-link:hover {
+      color: #ff6600;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="nav-container">
+      <!-- Hamburger Menu -->
+      <div class="hamburger-menu">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+
+      <!-- Side Menu -->
+      <div class="side-menu">
+        <button class="close-btn">×</button> <!-- Close button -->
+        <a href="index.html">Home</a>
+        <a href="content/options/menu/about-us.html">About Us</a>
+        <a href="content/options/cart.html">Cart</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div>
+      <h1>Salloohs PCs</h1>
+      <p>Built to suit everyone's needs</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <section class="main-content">
+    <div class="pc-option">
+      <a href="content/prebuilt.html" class="pc-option-link">
+        <img src="https://www.fiercepc.co.uk/media/catalog/product/cache/ac01c91bc3b665fbc513fe611a712c83/n/v/nv5_black_4_fans_1_1.png" alt="Pre-Built PC Image">
+        <h3>Pre-Built PC</h3>
+        <p>We did the research for you; all you need to do is select the one that fits your budget.</p>
+      </a>
+    </div>
+
+    <div class="pc-option">
+      <a href="content/custom.html" class="pc-option-link">
+        <img src="https://sigmawire.net/i/03/qj3zGm.png" alt="Custom Gaming PC Image">
+        <h3>Custom Gaming PC</h3>
+        <p>If you know what you're doing and have done enough research, you can select your own parts to give your PC a personal touch.</p>
+      </a>
+    </div>
+
+    <div class="pc-option">
+      <a href="content/streaming.html" class="pc-option-link">
+        <img src="https://assets.corsair.com/image/upload/f_auto,q_auto/products/Systems/a7500/CS-9050120-NA/VENGEANCE_a7500_240mm_AIO_Cooler_RENDER_01.png" alt="Streaming PC Image">
+        <h3>Under maintenance</h3>
+        <p>Under maintenance</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- Support Section -->
+  <section class="support-section">
+    <h2>Need Support? Get in Touch!</h2>
+    <form id="support-form">
+      <label for="name">Your Name</label>
+      <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+      <label for="gmail">Your Email</label>
+      <input type="email" id="gmail" name="gmail" placeholder="Enter your Gmail address" required>
+
+      <label for="message">Your Message</label>
+      <textarea id="message" name="message" placeholder="Write your message here..." required></textarea>
+
+      <button type="submit">Submit</button>
+    </form>
+  </section>
+
+  <!-- Footer Section -->
+  <footer>
+    <p>&copy; 2025 Salloohs PCs. All rights reserved.</p>
+    <p><a href="content/options/privacy-policy.html">Privacy Policy</a> | <a href="content/options/terms-of-service.html">Terms of Service</a></p>
+  </footer>
+
+  <!-- EmailJS Integration Script -->
+  <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script>
+    (function () {
+      emailjs.init("3OSQ4rXgVPHjcaUno"); // Replace with your public ID
+    })();
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("support-form");
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Get form values
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("gmail").value.trim();
+        const message = document.getElementById("message").value.trim();
+
+        // Validation
+        if (!name || !email || !message) {
+          alert("Please fill in all fields!");
+          return;
+        }
+
+        if (!email.endsWith("@gmail.com")) {
+          alert("Please use a Gmail address (must end with @gmail.com)");
+          return;
+        }
+
+        emailjs.sendForm("service_u17r2gs", "template_x29pqhi", form, "3OSQ4rXgVPHjcaUno")
+          .then(function (response) {
+            alert("Message sent successfully!");
+            form.reset();
+          }, function (error) {
+            alert("Failed to send message. Please try again.");
+            console.error("Error:", error);
+          });
+      });
+
+      // Hamburger Menu & Close Button JavaScript
+      const hamburgerMenu = document.querySelector(".hamburger-menu");
+      const sideMenu = document.querySelector(".side-menu");
+      const closeButton = document.querySelector(".close-btn");
+
+      // Toggle side menu on hamburger click
+      hamburgerMenu.addEventListener("click", function () {
+        sideMenu.style.transform = sideMenu.style.transform === "translateX(0%)" ? "translateX(100%)" : "translateX(0%)";
+      });
+
+      // Close side menu on close button click
+      closeButton.addEventListener("click", function () {
+        sideMenu.style.transform = "translateX(100%)";
+      });
+    });
+  </script>
+
+</body>
+</html>

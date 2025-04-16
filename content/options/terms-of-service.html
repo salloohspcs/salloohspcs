@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #222222;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Navigation bar */
+    nav {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 20px 20px;
+      background-color: #121212;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      box-sizing: border-box;
+    }
+
+    /* Hamburger Menu Icon */
+    .hamburger-menu {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 20px;
+    }
+
+    .hamburger-menu div {
+      background-color: white;
+      height: 4px;
+      width: 100%;
+      border-radius: 5px;
+    }
+
+    /* Side menu */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 250px;
+      height: 100%;
+      background-color: #121212;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+      transform: translateX(100%);
+      transition: transform 0.3s ease-out;
+      padding: 30px;
+      will-change: transform;
+    }
+
+    .side-menu a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      font-size: 1.5rem;
+      margin: 20px 0;
+    }
+
+    .side-menu a:hover {
+      color: #ff6600;
+    }
+
+    .close-menu {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    .nav-container.open .side-menu {
+      transform: translateX(0);
+    }
+
+    /* Hero Section */
+    .hero {
+      background-image: url('https://via.placeholder.com/1600x800');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      padding: 80px 20px;
+    }
+
+    /* Terms Of Serivice Content */
+    .terms-of-service-content {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+      line-height: 1.6;
+    }
+
+    .terms-of-service-content h2 {
+      color: #ff6600;
+      margin-top: 30px;
+    }
+
+    /* Footer Section */
+    footer {
+      background-color: #121212;
+      color: white;
+      text-align: center;
+      padding: 40px 0;
+      font-size: 1rem;
+      margin-top: auto;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #ff6600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="nav-container">
+      <div class="hamburger-menu" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="side-menu">
+        <span class="close-menu" onclick="toggleMenu()">×</span>
+        <a href="../../index.html">Home</a>
+        <a href="menu/about-us.html">About Us</a>
+        <a href="cart.html">Cart</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="hero">
+  </div>
+
+  <!-- Privacy Policy Content -->
+  <div class="terms-of-service-content">
+    <h1>Terms of Service</h1>
+    <p><strong>Last Updated:</strong> January 1, 2025</p>
+
+    <p>Welcome to <strong>Salloohs PCs</strong>! These Terms of Service ("Terms") govern your use of our website and any purchases made through our platform. By accessing or using our services, you agree to comply with these Terms. If you do not agree, please refrain from using our website.</p>
+
+    <h2>1. General Terms</h2>
+    <ul>
+      <li>Salloohs PCs ("we," "us," or "our") operates an online store specializing in custom gaming PCs, components, and related products.</li>
+      <li>You must be at least <strong>16 years old</strong></li>
+      <li>We reserve the right to modify these Terms at any time. Continued use of our website constitutes acceptance of updated Terms.</li>
+    </ul>
+
+    <h2>2. Ordering & Payment</h2>
+    <ul>
+      <li>All prices are listed in <strong>SAR</strong> and are subject to change without notice.</li>
+      <li>Orders are processed only after full payment is received.</li>
+      <li>We accept MADA, PayPal, and other payment methods listed at checkout.</li>
+      <li><strong>Pre-built PCs:</strong> orders may take <strong>2-3 business days</strong> to process before shipping.</li>
+      <li><strong>Custom PCs:</strong> Build times vary based on complexity and component availability.</li>
+    </ul>
+
+    <h2>3. Shipping & Delivery</h2>
+    <ul>
+      <li>Shipping costs are calculated within the PC price.</li>
+      <li>Delivery times depend on location and shipping method.</li>
+      <li><strong>Risk of loss</strong> transfers to you upon delivery.</li>
+    </ul>
+
+    <h2>4. Returns & Refunds</h2>
+    
+    <h3>Pre-built & Custom PCs:</h3>
+    <ul>
+      <li><strong>30-Day Return Policy:</strong> Unopened/unused PCs may be returned within 30 days for a full refund (minus shipping).</li>
+      <li><strong>Defective Products:</strong> Contact us within <strong>14 days</strong> for replacement/repair.</li>
+      <li><strong>No Returns on Opened/Used PCs</strong> unless defective.</li>
+    </ul>
+
+    <h2>5. Warranty</h2>
+    <ul>
+      <li><strong>All PCs come with a 1-year limited warranty</strong> covering manufacturing defects.</li>
+      <li><strong>Components</strong> may have separate manufacturer warranties.</li>
+      <li><strong>Voided Warranty:</strong> Overclocking, physical damage, or unauthorized modifications void coverage.</li>
+    </ul>
+
+    <h2>6. Limitation of Liability</h2>
+    <p>Salloohs PCs is not liable for:</p>
+    <ul>
+      <li>Indirect, incidental, or consequential damages.</li>
+      <li>Data loss or hardware issues caused by misuse.</li>
+      <li>Delays due to unforeseen circumstances (e.g., supply shortages).</li>
+    </ul>
+
+    <h2>7. User Responsibilities</h2>
+    <ul>
+      <li>Provide accurate billing/shipping details.</li>
+      <li>Ensure compatibility of purchased components.</li>
+      <li>Follow safety guidelines when handling PC hardware.</li>
+    </ul>
+
+    <h2>8. Privacy Policy</h2>
+    <p>Your data is protected under our <a href="privacy-policy.html">Privacy Policy</a>.</p>
+    
+    <h2>9. Governing Law</h2>
+    <p>These Terms are governed by the laws of <strong>Saudi Arabia</strong>.</p>
+
+  <h2>10. Contact Us</h2>
+      <p>For questions or disputes, contact:</p>
+      <p>📧 <strong>Email:</strong> salloohspcs@gmail.com</p>
+    </div>
+
+  <!-- Footer Section -->
+  <footer>
+    <p>&copy; 2025 Salloohs PCs. All rights reserved.</p>
+    <p><a href="privacy-policy.html">Privacy Policy</a> | <a href="terms-of-service.html">Terms of Service</a></p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    function toggleMenu() {
+      document.querySelector('.nav-container').classList.toggle('open');
+    }
+  </script>
+
+</body>
+</html>

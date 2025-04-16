@@ -1,0 +1,1251 @@
+a<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom PC Builder</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #222222;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 20px 20px;
+      background-color: #121212;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      box-sizing: border-box;
+    }
+
+    .hamburger-menu {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 20px;
+    }
+
+    .hamburger-menu div {
+      background-color: white;
+      height: 4px;
+      width: 100%;
+      border-radius: 5px;
+    }
+
+    .side-menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 250px;
+      height: 100%;
+      background-color: #121212;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+      transform: translateX(100%);
+      transition: transform 0.3s ease-out;
+      padding: 30px;
+      will-change: transform;
+    }
+
+    .side-menu a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      font-size: 1.5rem;
+      margin: 20px 0;
+    }
+
+    .side-menu a:hover {
+      color: #ff6600;
+    }
+
+    .close-menu {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    .nav-container.open .side-menu {
+      transform: translateX(0);
+    }
+
+    .hero {
+      background-image: url('https://i0.wp.com/minimalistboy.com/wp-content/uploads/2018/10/declutter-computer-dark-room.jpg?w=1280&ssl=1');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      padding: 160px 20px 80px;
+    }
+
+    .pc-builder {
+      padding-top: 80px;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .pc-builder {
+        flex-direction: row;
+        padding-top: 80px;
+      }
+    }
+
+    .components {
+      flex: 2;
+      background-color: #333;
+      padding: 20px;
+      border-radius: 10px;
+      order: 1;
+    }
+
+    .summary {
+      flex: 1;
+      background-color: #333;
+      padding: 20px;
+      border-radius: 10px;
+      height: fit-content;
+      order: 2;
+    }
+
+    @media (min-width: 768px) {
+      .summary {
+        order: 3;
+      }
+    }
+
+    .component-section {
+      margin-bottom: 30px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid #555;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      margin-top: 15px;
+    }
+
+    select {
+      width: 100%;
+      min-width: 250px;
+      max-width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      margin-bottom: 15px;
+      background-color: #444;
+      color: white;
+      border: 1px solid #555;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 14px;
+      height: 42px;
+    }
+
+    select option {
+      font-size: 14px;
+      padding: 8px 12px;
+    }
+
+    .warning {
+      color: #ff5555;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+
+    .recommendation {
+      color: #66ff66;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .buy-now {
+      background-color: #ff6600;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .add-to-cart {
+      background-color: #cc0000;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .add-to-cart.added {
+      background-color: #00aa00;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .total-price {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .psu-display {
+      background-color: #444;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .psu-wattage {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #ff6600;
+    }
+
+    .psu-price {
+      margin-top: 5px;
+    }
+
+    .cable-extensions {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .extra-fans {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cable-extensions input,
+    .extra-fans input {
+      width: 20px;
+      height: 20px;
+    }
+
+    footer {
+      background-color: #121212;
+      color: white;
+      text-align: center;
+      padding: 40px 0;
+      font-size: 1rem;
+      margin-top: auto;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #ff6600;
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav-container">
+    <div class="hamburger-menu" onclick="toggleMenu()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div class="side-menu">
+      <span class="close-menu" onclick="toggleMenu()">×</span>
+      <a href="../index.html">Home</a>
+      <a href="options/menu/about-us.html">About Us</a>
+      <a href="options/cart.html">Cart</a>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <h1>Build Your Dream PC</h1>
+  </div>
+
+  <div class="pc-builder">
+    <div class="components">
+      <h2>Your configuration</h2>
+      <p>Choose your components</p>
+      
+      <button onclick="resetConfig()" style="background-color: #444; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-bottom: 20px;">Reset Configuration</button>
+      
+      <div class="component-section">
+        <h3>CPU</h3>
+        <label>Brand</label>
+        <select id="cpu-brand" onchange="updateCpuSockets()">
+          <option value="">Select Brand</option>
+          <option value="amd">AMD</option>
+          <option value="intel">Intel</option>
+        </select>
+        
+        <label>Socket</label>
+        <select id="cpu-socket" onchange="updateCpuModels()" disabled>
+          <option value="">Select Socket</option>
+        </select>
+        
+        <label>CPU</label>
+        <select id="cpu-model" onchange="updateCoolerOptions()" disabled>
+          <option value="">Select CPU</option>
+        </select>
+        <div id="cpu-warning" class="warning"></div>
+      </div>
+      
+      <div class="component-section">
+        <h3>Cooler</h3>
+        <select id="cooler" onchange="updateTotalPrice()">
+          <option value="">Select Cooler</option>
+        </select>
+        <div id="cooler-recommendation" class="recommendation"></div>
+      </div>
+      
+      <div class="component-section">
+        <h3>Motherboard</h3>
+        <select id="mobo-model" onchange="updateCaseOptions()" disabled>
+          <option value="">Select Model</option>
+        </select>
+        <div id="mobo-warning" class="warning"></div>
+      </div>
+      
+      <div class="component-section">
+        <h3>GPU</h3>
+        <label>Brand</label>
+        <select id="gpu-brand" onchange="updateGpuModels()">
+          <option value="">Select Brand</option>
+          <option value="nvidia">NVIDIA</option>
+          <option value="amd">AMD</option>
+        </select>
+        
+        <label>Graphic Cards</label>
+        <select id="gpu-model" onchange="updatePsuAndTotalPrice()" disabled>
+          <option value="">Select Model</option>
+        </select>
+        <div id="gpu-warning" class="warning">Model of GPUs may vary</div>
+      </div>
+      
+      <div class="component-section">
+        <h3>RAM</h3>
+        <select id="ram" onchange="updateTotalPrice()" disabled>
+          <option value="">Select RAM</option>
+        </select>
+        <div id="ram-warning" class="warning"></div>
+      </div>
+      
+      <div class="component-section">
+        <h3>NVMe SSD</h3>
+        <select id="ssd" onchange="updateTotalPrice()">
+          <option value="">Select SSD</option>
+          <option value="1tb">1TB - 300 SAR</option>
+          <option value="2tb">2TB - 500 SAR</option>
+          <option value="4tb">4TB - 1100 SAR</option>
+        </select>
+      </div>
+      
+      <div class="component-section">
+        <h3>Case</h3>
+        <select id="case" onchange="updateTotalPrice()" disabled>
+          <option value="">Select Case</option>
+        </select>
+      </div>
+
+      <div class="cable-extensions">
+        <input type="checkbox" id="cable-extensions" onchange="updateTotalPrice()">
+        <label for="cable-extensions">Braided Cable Extensions (+150 SAR)</label>
+      </div>
+
+      <div class="extra-fans">
+        <input type="checkbox" id="extra-fans" onchange="updateTotalPrice()">
+        <label for="extra-fans">Extra Fans (+150 SAR)</label>
+      </div>
+      
+      <div class="buttons">
+        <button class="buy-now" onclick="buyNow()" disabled>Buy Now</button>
+        <button class="add-to-cart" id="add-to-cart" onclick="addToCart()" disabled>Add to Cart</button>
+      </div>
+    </div>
+    
+    <div class="summary">
+      <h3>Your recommended PSU wattage is</h3>
+      <div class="psu-display">
+        <div class="psu-wattage" id="psu-wattage">-</div>
+        <div class="psu-price" id="psu-price"></div>
+      </div>
+      
+      <div class="total-price">
+        Total Price: <span id="total-price">0 SAR</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Salloohs PCs. All rights reserved.</p>
+    <p><a href="options/privacy-policy.html">Privacy Policy</a> | <a href="options/terms-of-service.html">Terms of Service</a></p>
+  </footer>
+
+  <script>
+    const cpuData = {
+      amd: {
+        am4: [
+          { name: "Ryzen 5 5500", price: 500, hasStockCooler: true },
+          { name: "Ryzen 5 5600x", price: 550, hasStockCooler: true },
+          { name: "Ryzen 7 5700x", price: 600 },
+          { name: "Ryzen 7 5800x", price: 650 }
+        ],
+        am5: [
+          { name: "Ryzen 5 7600x", price: 1000 },
+          { name: "Ryzen 7 7700x", price: 1650 },
+          { name: "Ryzen 7800x3d", price: 2200 },
+          { name: "Ryzen 9 7900x", price: 1700 },
+          { name: "Ryzen 9 7950x", price: 2800 },
+          { name: "Ryzen 9 7950x3d", price: 3900 },
+          { name: "Ryzen 5 9600x", price: 1200 },
+          { name: "Ryzen 7 9700x", price: 1750 },
+          { name: "Ryzen 7 9800x3d", price: 2900 },
+          { name: "Ryzen 9 9900x", price: 2100 },
+          { name: "Ryzen 9 9900x3d", price: 3900 },
+          { name: "Ryzen 9 9950x", price: 2900 },
+          { name: "Ryzen 9 9950x3d", price: 4500 }
+        ]
+      },
+      intel: {
+        "lga1700-ddr4": [
+          { name: "i3 12100f", price: 450, hasStockCooler: true },
+          { name: "i5 12400f", price: 600, hasStockCooler: true },
+          { name: "i5 14400f", price: 700, hasStockCooler: true },
+          { name: "i5 14600k", price: 1200 },
+          { name: "i7 14700k", price: 1800 },
+          { name: "i9 14900k", price: 2200, warning: "This CPU is not recommended due to instability issues" }
+        ],
+        "lga1700-ddr5": [
+          { name: "i3 12100f", price: 450 },
+          { name: "i5 12400f", price: 600 },
+          { name: "i5 14400f", price: 700 },
+          { name: "i5 14600k", price: 1200 },
+          { name: "i7 14700k", price: 1800 },
+          { name: "i9 14900k", price: 2200, warning: "This CPU is not recommended due to instability issues" }
+        ],
+        "lga1851": [
+          { 
+            name: "Core Ultra 5 245k", 
+            price: 1550,
+            warning: "⚠️ LGA 1851 platform is not recommended due to shitty performance" 
+          },
+          { 
+            name: "Core Ultra 7 265k", 
+            price: 1800,
+            warning: "⚠️ LGA 1851 platform is not recommended due to shitty performance" 
+          },
+          { 
+            name: "Core Ultra 9 285k", 
+            price: 3000,
+            warning: "⚠️ LGA 1851 platform is not recommended due to shitty performance" 
+          }
+        ]
+      }
+    };
+
+    const moboData = {
+      amd: {
+        am4: [
+          { name: "B550 (M-ATX)", price: 500, formFactor: "matx" },
+          { name: "B550 (ATX)", price: 600, formFactor: "atx" }
+        ],
+        am5: [
+          { name: "B650 (ATX)", price: 750, formFactor: "atx" },
+          { name: "X670 (ATX)", price: 1150, formFactor: "atx" },
+          { name: "X870 (ATX)", price: 1250, formFactor: "atx" }
+        ]
+      },
+      intel: {
+        "lga1700-ddr4": [
+          { name: "H610 (M-ATX)", price: 450, formFactor: "matx" },
+          { name: "B660 (M-ATX)", price: 600, formFactor: "matx" },
+          { name: "B660 (ATX)", price: 650, formFactor: "atx" },
+          { name: "B760 (M-ATX)", price: 700, formFactor: "matx" },
+          { name: "B760 (ATX)", price: 750, formFactor: "atx" },
+          { name: "Z790 (ATX)", price: 900, formFactor: "atx" }
+        ],
+        "lga1700-ddr5": [
+          { name: "B660 (M-ATX)", price: 600, formFactor: "matx" },
+          { name: "B660 (ATX)", price: 650, formFactor: "atx" },
+          { name: "B760 (M-ATX)", price: 700, formFactor: "matx" },
+          { name: "B760 (ATX)", price: 750, formFactor: "atx" },
+          { name: "Z790 (ATX)", price: 1100, formFactor: "atx" }
+        ],
+        "lga1851": [
+          { name: "H810M (M-ATX)", price: 650, formFactor: "matx" },
+          { name: "B860 (M-ATX)", price: 750, formFactor: "matx" },
+          { name: "B860 (ATX)", price: 850, formFactor: "atx" },
+          { name: "Z890 (ATX)", price: 1200, formFactor: "atx" }
+        ]
+      }
+    };
+
+    const gpuData = {
+      nvidia: [
+        { name: "RTX 3050 (6GB)", price: 900, psu: 650, highEndPsu: 850 },
+        { name: "RTX 3050 (8GB)", price: 1050, psu: 650, highEndPsu: 850 },
+        { name: "RTX 3060 (12GB)", price: 1400, psu: 650, highEndPsu: 850 },
+        { name: "RTX 4060", price: 1700, psu: 650, highEndPsu: 850 },
+        { name: "RTX 4060 ti (8GB)", price: 2000, psu: 650, highEndPsu: 850 },
+        { name: "RTX 4060 ti (16GB)", price: 2300, psu: 650, highEndPsu: 850 },
+        { name: "RTX 4070", price: 3200, psu: 750, highEndPsu: 1000 },
+        { name: "RTX 4070 Super", price: 4200, psu: 750, highEndPsu: 1000 },
+        { name: "RTX 4070 Ti Super", price: 4500, psu: 850, highEndPsu: 1000 },
+        { name: "RTX 4080 Super", price: 5500, psu: 1000, highEndPsu: 1200 },
+        { name: "RTX 5080", price: 8000, psu: 1000, highEndPsu: 1200 }
+      ],
+      amd: [
+        { name: "RX 6650 XT", price: 1200, psu: 650, highEndPsu: 850 },
+        { name: "RX 7600", price: 1600, psu: 650, highEndPsu: 850 },
+        { name: "RX 7700 XT", price: 2800, psu: 750, highEndPsu: 1000 },
+        { name: "RX 7800 XT", price: 3000, psu: 750, highEndPsu: 1000 },
+        { name: "RX 7900 XT", price: 3600, psu: 850, highEndPsu: 1000 },
+        { name: "RX 9070", price: 4000, psu: 850, highEndPsu: 1000 },
+        { name: "RX 9070 XT", price: 4500, psu: 850, highEndPsu: 1000 }
+      ]
+    };
+
+    const caseData = [
+      { name: "Montech XR", price: 230, formFactors: ["matx", "atx"], image: "https://www.montechpc.com/images/375588/0/1100?stamp=1734687831" },
+      { name: "Montech Sky Two", price: 420, formFactors: ["matx", "atx"], image: "https://www.montechpc.com/images/362141/0/1100?stamp=1740636789" },
+      { name: "Montech Air 100", price: 230, formFactors: ["matx"], image: "https://www.montechpc.com/images/375613/0/1100?stamp=1734689091" },
+      { name: "NZXT H6 Flow RGB", price: 650, formFactors: ["matx", "atx"], image: "https://nzxt.com/assets/cms/34299/1698160097-h5-flow-rgb-hero-empty-black.png?auto=format&dpr=2&fit=crop&h=1000&w=1000" },
+      { name: "NZXT H7 Flow RGB", price: 650, formFactors: ["matx", "atx"], image: "https://sigmawire.net/i/03/XeQkDG.png" },
+      { name: "Cooler Master MasterBox 520", price: 420, formFactors: ["matx", "atx"], image: "https://a.storyblok.com/f/281110/9041a7d3cb/mb520-black-gallery-3.png/m/1920x0/smart" },
+      { name: "Lian Li Lancool 216", price: 550, formFactors: ["matx", "atx"], image: "https://sigmawire.net/i/03/XWecOA.png" }
+    ];
+
+    const psuPrices = {
+      650: 300,
+      750: 450,
+      850: 650,
+      1000: 850,
+      1200: 1000
+    };
+
+    let currentConfig = {
+      cpuBrand: "",
+      cpuSocket: "",
+      cpuModel: "",
+      cooler: "",
+      moboFormFactor: "",
+      moboModel: "",
+      gpuBrand: "",
+      gpuModel: "",
+      ram: "",
+      ssd: "",
+      case: "",
+      psu: 0,
+      cableExtensions: false,
+      extraFans: false,
+      totalPrice: 0
+    };
+
+    function updateSelect(selectId, options, selectedValue = "") {
+      const select = document.getElementById(selectId);
+      select.innerHTML = options;
+      if (selectedValue) {
+        select.value = selectedValue;
+      }
+      select.disabled = options === '<option value="">Select Model</option>';
+      validateSelections();
+    }
+
+    function validateSelections() {
+      const requiredFields = [
+        document.getElementById("cpu-brand").value,
+        document.getElementById("cpu-socket").value,
+        document.getElementById("cpu-model").value,
+        document.getElementById("cooler").value,
+        document.getElementById("mobo-model").value,
+        document.getElementById("gpu-brand").value,
+        document.getElementById("gpu-model").value,
+        document.getElementById("ram").value,
+        document.getElementById("ssd").value,
+        document.getElementById("case").value
+      ];
+
+      const allSelected = requiredFields.every(field => field !== "");
+      
+      document.getElementById("add-to-cart").disabled = !allSelected;
+      document.querySelector(".buy-now").disabled = !allSelected;
+      
+      return allSelected;
+    }
+
+    function updateCpuSockets() {
+      const brand = document.getElementById("cpu-brand").value;
+      currentConfig.cpuBrand = brand;
+      
+      if (!brand) {
+        updateSelect("cpu-socket", '<option value="">Select Socket</option>');
+        updateSelect("cpu-model", '<option value="">Select CPU</option>');
+        document.getElementById("cpu-socket").disabled = true;
+        document.getElementById("cpu-model").disabled = true;
+        validateSelections();
+        return;
+      }
+      
+      let socketOptions = '<option value="">Select Socket</option>';
+      if (brand === "amd") {
+        socketOptions += '<option value="am4">AM4</option>';
+        socketOptions += '<option value="am5">AM5</option>';
+      } else if (brand === "intel") {
+        socketOptions += '<option value="lga1700-ddr4">LGA 1700 DDR4</option>';
+        socketOptions += '<option value="lga1700-ddr5">LGA 1700 DDR5</option>';
+        socketOptions += '<option value="lga1851">LGA 1851</option>';
+      }
+      
+      updateSelect("cpu-socket", socketOptions);
+      document.getElementById("cpu-socket").disabled = false;
+      updateSelect("cpu-model", '<option value="">Select CPU</option>');
+      document.getElementById("cpu-model").disabled = true;
+      
+      updateSelect("mobo-model", '<option value="">Select Model</option>');
+      document.getElementById("mobo-model").disabled = true;
+      
+      updateSelect("ram", '<option value="">Select RAM</option>');
+      document.getElementById("ram").disabled = true;
+      
+      currentConfig.cpuSocket = "";
+      currentConfig.cpuModel = "";
+      updateCoolerRecommendation();
+      updatePsuAndTotalPrice();
+      validateSelections();
+    }
+
+    function updateCpuModels() {
+      const brand = document.getElementById("cpu-brand").value;
+      const socket = document.getElementById("cpu-socket").value;
+      currentConfig.cpuSocket = socket;
+      
+      if (!socket) {
+        updateSelect("cpu-model", '<option value="">Select CPU</option>');
+        document.getElementById("cpu-model").disabled = true;
+        validateSelections();
+        return;
+      }
+      
+      const models = cpuData[brand][socket];
+      let modelOptions = '<option value="">Select CPU</option>';
+      
+      models.forEach(model => {
+        modelOptions += `<option value="${model.name}">${model.name} - ${model.price} SAR</option>`;
+      });
+      
+      updateSelect("cpu-model", modelOptions);
+      document.getElementById("cpu-model").disabled = false;
+      
+      updateMoboOptions();
+      updateRamOptions();
+      updateCoolerOptions();
+      
+      currentConfig.cpuModel = "";
+      updatePsuAndTotalPrice();
+      validateSelections();
+    }
+
+    function updateCoolerOptions() {
+      const cpuModel = document.getElementById("cpu-model").value;
+      const cpuBrand = document.getElementById("cpu-brand").value;
+      const cpuSocket = document.getElementById("cpu-socket").value;
+      
+      if (!cpuModel) {
+        updateSelect("cooler", '<option value="">Select Cooler</option>');
+        document.getElementById("cooler-recommendation").textContent = "";
+        validateSelections();
+        return;
+      }
+      
+      const selectedCpu = cpuData[cpuBrand][cpuSocket].find(cpu => cpu.name === cpuModel);
+      
+      let coolerOptions = '<option value="">Select Cooler</option>';
+      
+      if (selectedCpu.hasStockCooler) {
+        coolerOptions += '<option value="stock">Stock Cooler (Included) - 0 SAR</option>';
+      }
+      
+      coolerOptions += `
+        <option value="single-tower">Single-Tower air cooler - 120 SAR</option>
+        <option value="dual-tower">Dual-Tower air cooler - 250 SAR</option>
+        <option value="aio">AIO Water cooler (360MM) - 700 SAR</option>
+        <option value="aio-rgb">AIO Water cooler (360MM With ARGB) - 900 SAR</option>
+      `;
+      
+      updateSelect("cooler", coolerOptions);
+      updateCoolerRecommendation();
+      validateSelections();
+    }
+
+    function updateCoolerRecommendation() {
+      const cpuModel = document.getElementById("cpu-model").value;
+      const recommendationElement = document.getElementById("cooler-recommendation");
+      
+      if (!cpuModel) {
+        recommendationElement.textContent = "";
+        return;
+      }
+      
+      const highEndCpus = [
+        "i9 14900k", "i7 14700k", "Core Ultra 9 285k", "Core Ultra 7 265k", 
+        "Ryzen 9 9950x", "Ryzen 9 9950x3d", "Ryzen 9 9900x", "Ryzen 9 9900x3d", 
+        "Ryzen 9 7950x", "Ryzen 9 7950x3d", "Ryzen 9 7900x"
+      ];
+      
+      const midRangeCpus = [
+        "i5 14600k", "Core Ultra 5 245k", "Ryzen 7 9800x3d", "Ryzen 7 9700x", 
+        "Ryzen 7800x3d", "Ryzen 7700x", "Ryzen 7 5800x", "Ryzen 7 5700x",
+        "Ryzen 7 7700x"
+      ];
+      
+      if (highEndCpus.some(cpu => cpuModel.includes(cpu))) {
+        recommendationElement.textContent = "Recommended: AIO Water cooler (with or without ARGB)";
+      } else if (midRangeCpus.some(cpu => cpuModel.includes(cpu))) {
+        recommendationElement.textContent = "Recommended: Dual-Tower air cooler or AIO Water cooler (with or without ARGB)";
+      } else {
+        recommendationElement.textContent = "";
+      }
+    }
+
+    function updateMoboOptions() {
+      const brand = document.getElementById("cpu-brand").value;
+      const socket = document.getElementById("cpu-socket").value;
+      
+      if (!brand || !socket) {
+        updateSelect("mobo-model", '<option value="">Select Model</option>');
+        document.getElementById("mobo-model").disabled = true;
+        validateSelections();
+        return;
+      }
+      
+      const mobos = moboData[brand][socket];
+      let moboOptions = '<option value="">Select Model</option>';
+      
+      mobos.forEach(mobo => {
+        moboOptions += `<option value="${mobo.name}">${mobo.name} - ${mobo.price} SAR</option>`;
+      });
+      
+      updateSelect("mobo-model", moboOptions);
+      document.getElementById("mobo-model").disabled = false;
+      
+      currentConfig.moboModel = "";
+      updateCaseOptions();
+      updatePsuAndTotalPrice();
+      validateSelections();
+    }
+
+    function updateRamOptions() {
+      const socket = document.getElementById("cpu-socket").value;
+      
+      if (!socket) {
+        updateSelect("ram", '<option value="">Select RAM</option>');
+        document.getElementById("ram").disabled = true;
+        validateSelections();
+        return;
+      }
+      
+      let ramOptions = '<option value="">Select RAM</option>';
+      
+      if (socket === "am4" || socket === "lga1700-ddr4") {
+        ramOptions += '<option value="16gb">16GB - 150 SAR</option>';
+        ramOptions += '<option value="32gb">32GB - 250 SAR</option>';
+        ramOptions += '<option value="64gb">64GB - 500 SAR</option>';
+        document.getElementById("ram-warning").textContent = socket === "am4" || socket === "lga1700-ddr4" ? 
+          "64GB DDR4 RAM is not recommended but you can still choose it anyway" : "";
+      } else {
+        ramOptions += '<option value="16gb">16GB - 300 SAR</option>';
+        ramOptions += '<option value="32gb">32GB - 500 SAR</option>';
+        ramOptions += '<option value="64gb">64GB - 950 SAR</option>';
+        document.getElementById("ram-warning").textContent = "";
+      }
+      
+      updateSelect("ram", ramOptions);
+      document.getElementById("ram").disabled = false;
+      
+      currentConfig.ram = "";
+      updatePsuAndTotalPrice();
+      validateSelections();
+    }
+
+    function updateGpuModels() {
+      const brand = document.getElementById("gpu-brand").value;
+      currentConfig.gpuBrand = brand;
+      
+      if (!brand) {
+        updateSelect("gpu-model", '<option value="">Select Model</option>');
+        document.getElementById("gpu-model").disabled = true;
+        validateSelections();
+        return;
+      }
+      
+      const gpus = gpuData[brand];
+      let gpuOptions = '<option value="">Select Model</option>';
+      
+      gpus.forEach(gpu => {
+        gpuOptions += `<option value="${gpu.name}">${gpu.name} - ${gpu.price} SAR</option>`;
+      });
+      
+      updateSelect("gpu-model", gpuOptions);
+      document.getElementById("gpu-model").disabled = false;
+      
+      currentConfig.gpuModel = "";
+      updatePsuAndTotalPrice();
+      validateSelections();
+    }
+
+    function updateCaseOptions() {
+      const moboModel = document.getElementById("mobo-model").value;
+      const cooler = document.getElementById("cooler").value;
+      
+      if (!moboModel) {
+        updateSelect("case", '<option value="">Select Case</option>');
+        document.getElementById("case").disabled = true;
+        validateSelections();
+        return;
+      }
+      
+      const brand = document.getElementById("cpu-brand").value;
+      const socket = document.getElementById("cpu-socket").value;
+      const mobos = moboData[brand][socket];
+      const selectedMobo = mobos.find(mobo => mobo.name === moboModel);
+      
+      if (!selectedMobo) {
+        updateSelect("case", '<option value="">Select Case</option>');
+        document.getElementById("case").disabled = true;
+        validateSelections();
+        return;
+      }
+      
+      const formFactor = selectedMobo.formFactor;
+      currentConfig.moboFormFactor = formFactor;
+      
+      let caseOptions = '<option value="">Select Case</option>';
+      
+      caseData.forEach(caseItem => {
+        if (cooler && (cooler === "aio" || cooler === "aio-rgb") && caseItem.name === "Montech Air 100") {
+          return;
+        }
+        
+        if (caseItem.formFactors.includes(formFactor)) {
+          caseOptions += `<option value="${caseItem.name}">${caseItem.name} - ${caseItem.price} SAR</option>`;
+        }
+      });
+      
+      updateSelect("case", caseOptions);
+      document.getElementById("case").disabled = false;
+      
+      currentConfig.case = "";
+      updatePsuAndTotalPrice();
+      validateSelections();
+    }
+
+    function updatePsuAndTotalPrice() {
+      const cpuModel = document.getElementById("cpu-model").value;
+      const gpuModel = document.getElementById("gpu-model").value;
+      
+      if (!gpuModel) {
+        document.getElementById("psu-wattage").textContent = "-";
+        document.getElementById("psu-price").textContent = "";
+        updateTotalPrice();
+        return;
+      }
+      
+      const gpuBrand = document.getElementById("gpu-brand").value;
+      const gpus = gpuData[gpuBrand];
+      const selectedGpu = gpus.find(gpu => gpu.name === gpuModel);
+      
+      if (!selectedGpu) {
+        document.getElementById("psu-wattage").textContent = "-";
+        document.getElementById("psu-price").textContent = "";
+        updateTotalPrice();
+        return;
+      }
+      
+      const isHighEndCpu = cpuModel && (
+        cpuModel.includes("i9 14900k") || 
+        cpuModel.includes("Core Ultra 9 285k")
+      );
+      
+      const psuWattage = isHighEndCpu ? selectedGpu.highEndPsu : selectedGpu.psu;
+      const psuPrice = psuPrices[psuWattage];
+      
+      document.getElementById("psu-wattage").textContent = `${psuWattage}W`;
+      document.getElementById("psu-price").textContent = `${psuPrice} SAR`;
+      
+      currentConfig.psu = psuPrice;
+      updateTotalPrice();
+    }
+
+    function updateTotalPrice() {
+      const cpuModel = document.getElementById("cpu-model").value;
+      const cpuBrand = document.getElementById("cpu-brand").value;
+      const cpuSocket = document.getElementById("cpu-socket").value;
+      const cpuPrice = cpuModel ? 
+        cpuData[cpuBrand][cpuSocket].find(cpu => cpu.name === cpuModel).price : 0;
+      
+      const cooler = document.getElementById("cooler").value;
+      const coolerPrice = 
+        cooler === "stock" ? 0 :
+        cooler === "single-tower" ? 120 :
+        cooler === "dual-tower" ? 250 :
+        cooler === "aio" ? 700 :
+        cooler === "aio-rgb" ? 900 : 0;
+      
+      const moboModel = document.getElementById("mobo-model").value;
+      const moboBrand = document.getElementById("cpu-brand").value;
+      const moboSocket = document.getElementById("cpu-socket").value;
+      const moboPrice = moboModel ? 
+        moboData[moboBrand][moboSocket].find(mobo => mobo.name === moboModel).price : 0;
+      
+      const gpuModel = document.getElementById("gpu-model").value;
+      const gpuBrand = document.getElementById("gpu-brand").value;
+      const gpuPrice = gpuModel ? 
+        gpuData[gpuBrand].find(gpu => gpu.name === gpuModel).price : 0;
+      
+      const ram = document.getElementById("ram").value;
+      const ramPrice = 
+        ram === "16gb" ? (currentConfig.cpuSocket === "am4" || currentConfig.cpuSocket === "lga1700-ddr4" ? 150 : 300) :
+        ram === "32gb" ? (currentConfig.cpuSocket === "am4" || currentConfig.cpuSocket === "lga1700-ddr4" ? 250 : 500) :
+        ram === "64gb" ? (currentConfig.cpuSocket === "am4" || currentConfig.cpuSocket === "lga1700-ddr4" ? 500 : 950) : 0;
+      
+      const ssd = document.getElementById("ssd").value;
+      const ssdPrice = 
+        ssd === "1tb" ? 300 :
+        ssd === "2tb" ? 500 :
+        ssd === "4tb" ? 1100 : 0;
+      
+      const caseItem = document.getElementById("case").value;
+      const casePrice = caseItem ? 
+        caseData.find(c => c.name === caseItem).price : 0;
+      
+      const psuPrice = currentConfig.psu || 0;
+      
+      const cableExtensions = document.getElementById("cable-extensions").checked;
+      const cableExtensionsPrice = cableExtensions ? 150 : 0;
+      currentConfig.cableExtensions = cableExtensions;
+      
+      const extraFans = document.getElementById("extra-fans").checked;
+      const extraFansPrice = extraFans ? 150 : 0;
+      currentConfig.extraFans = extraFans;
+      
+      const totalPrice = cpuPrice + coolerPrice + moboPrice + gpuPrice + 
+                         ramPrice + ssdPrice + casePrice + psuPrice + 
+                         cableExtensionsPrice + extraFansPrice;
+      
+      document.getElementById("total-price").textContent = `${totalPrice} SAR`;
+      currentConfig.totalPrice = totalPrice;
+    }
+
+    function resetConfig() {
+      if (!confirm("Are you sure you want to reset your configuration? All selections will be lost.")) {
+        return;
+      }
+      
+      document.getElementById("cpu-brand").value = "";
+      document.getElementById("cpu-socket").value = "";
+      document.getElementById("cpu-model").value = "";
+      document.getElementById("cooler").value = "";
+      document.getElementById("mobo-model").value = "";
+      document.getElementById("gpu-brand").value = "";
+      document.getElementById("gpu-model").value = "";
+      document.getElementById("ram").value = "";
+      document.getElementById("ssd").value = "";
+      document.getElementById("case").value = "";
+      document.getElementById("cable-extensions").checked = false;
+      document.getElementById("extra-fans").checked = false;
+      
+      document.getElementById("cpu-socket").disabled = true;
+      document.getElementById("cpu-model").disabled = true;
+      document.getElementById("mobo-model").disabled = true;
+      document.getElementById("gpu-model").disabled = true;
+      document.getElementById("ram").disabled = true;
+      document.getElementById("case").disabled = true;
+      
+      document.getElementById("cpu-warning").textContent = "";
+      document.getElementById("cooler-recommendation").textContent = "";
+      document.getElementById("mobo-warning").textContent = "";
+      document.getElementById("ram-warning").textContent = "";
+      
+      document.getElementById("psu-wattage").textContent = "-";
+      document.getElementById("psu-price").textContent = "";
+      document.getElementById("total-price").textContent = "0 SAR";
+      
+      currentConfig = {
+        cpuBrand: "",
+        cpuSocket: "",
+        cpuModel: "",
+        cooler: "",
+        moboFormFactor: "",
+        moboModel: "",
+        gpuBrand: "",
+        gpuModel: "",
+        ram: "",
+        ssd: "",
+        case: "",
+        psu: 0,
+        cableExtensions: false,
+        extraFans: false,
+        totalPrice: 0
+      };
+      
+      validateSelections();
+    }
+
+    function addToCart() {
+      if (!validateSelections()) {
+        alert("Please select all required components before adding to cart");
+        return;
+      }
+      
+      const cpuBrand = document.getElementById("cpu-brand").value;
+      const cpuSocket = document.getElementById("cpu-socket").value;
+      const cpuModel = document.getElementById("cpu-model").value;
+      const cooler = document.getElementById("cooler").value;
+      const moboModel = document.getElementById("mobo-model").value;
+      const gpuBrand = document.getElementById("gpu-brand").value;
+      const gpuModel = document.getElementById("gpu-model").value;
+      const ram = document.getElementById("ram").value;
+      const ssd = document.getElementById("ssd").value;
+      const caseItem = document.getElementById("case").value;
+      const psuWattage = document.getElementById("psu-wattage").textContent;
+      const cableExtensions = document.getElementById("cable-extensions").checked;
+      const extraFans = document.getElementById("extra-fans").checked;
+      
+      const cpuPrice = cpuData[cpuBrand][cpuSocket].find(cpu => cpu.name === cpuModel).price;
+      const coolerPrice = 
+        cooler === "stock" ? 0 :
+        cooler === "single-tower" ? 120 :
+        cooler === "dual-tower" ? 250 :
+        cooler === "aio" ? 700 :
+        cooler === "aio-rgb" ? 900 : 0;
+      const moboPrice = moboData[cpuBrand][cpuSocket].find(mobo => mobo.name === moboModel).price;
+      const gpuPrice = gpuData[gpuBrand].find(gpu => gpu.name === gpuModel).price;
+      const ramPrice = 
+        ram === "16gb" ? (cpuSocket === "am4" || cpuSocket === "lga1700-ddr4" ? 150 : 300) :
+        ram === "32gb" ? (cpuSocket === "am4" || cpuSocket === "lga1700-ddr4" ? 250 : 500) :
+        ram === "64gb" ? (cpuSocket === "am4" || cpuSocket === "lga1700-ddr4" ? 500 : 950) : 0;
+      const ssdPrice = 
+        ssd === "1tb" ? 300 :
+        ssd === "2tb" ? 500 :
+        ssd === "4tb" ? 1100 : 0;
+      const casePrice = caseData.find(c => c.name === caseItem).price;
+      const caseImage = caseData.find(c => c.name === caseItem).image;
+      const psuPrice = currentConfig.psu;
+      const cableExtensionsPrice = cableExtensions ? 150 : 0;
+      const extraFansPrice = extraFans ? 150 : 0;
+      
+      const cartItem = {
+        name: "Custom PC Build",
+        image: caseImage,
+        price: currentConfig.totalPrice + " SAR",
+        specs: [
+          `CPU: ${cpuModel} - ${cpuPrice} SAR`,
+          `Cooler: ${document.getElementById("cooler").selectedOptions[0].text}`,
+          `Motherboard: ${moboModel} - ${moboPrice} SAR`,
+          `GPU: ${gpuModel} - ${gpuPrice} SAR`,
+          `RAM: ${document.getElementById("ram").selectedOptions[0].text}`,
+          `SSD: ${document.getElementById("ssd").selectedOptions[0].text}`,
+          `Case: ${caseItem} - ${casePrice} SAR`,
+          `PSU: ${psuWattage} - ${psuPrice} SAR`,
+          cableExtensions ? `Braided Cable Extensions: +150 SAR` : "",
+          extraFans ? `Extra Fans: +150 SAR` : ""
+        ].filter(item => item !== "")
+      };
+      
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.push(cartItem);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      
+      const addToCartBtn = document.getElementById("add-to-cart");
+      addToCartBtn.textContent = "Added to Cart";
+      addToCartBtn.classList.add("added");
+      
+      setTimeout(() => {
+        addToCartBtn.textContent = "Add to Cart";
+        addToCartBtn.classList.remove("added");
+      }, 800);
+    }
+
+    function buyNow() {
+      if (!validateSelections()) {
+        alert("Please select all required components before purchasing");
+        return;
+      }
+      
+      // Get all selected components
+      const cpuBrand = document.getElementById("cpu-brand").value;
+      const cpuSocket = document.getElementById("cpu-socket").value;
+      const cpuModel = document.getElementById("cpu-model").value;
+      const cpuPrice = cpuData[cpuBrand][cpuSocket].find(cpu => cpu.name === cpuModel).price;
+      
+      const cooler = document.getElementById("cooler").value;
+      const coolerText = document.getElementById("cooler").selectedOptions[0].text;
+      
+      const moboModel = document.getElementById("mobo-model").value;
+      const moboPrice = moboData[cpuBrand][cpuSocket].find(mobo => mobo.name === moboModel).price;
+      
+      const gpuBrand = document.getElementById("gpu-brand").value;
+      const gpuModel = document.getElementById("gpu-model").value;
+      const gpuPrice = gpuData[gpuBrand].find(gpu => gpu.name === gpuModel).price;
+      
+      const ram = document.getElementById("ram").value;
+      const ramText = document.getElementById("ram").selectedOptions[0].text;
+      
+      const ssd = document.getElementById("ssd").value;
+      const ssdText = document.getElementById("ssd").selectedOptions[0].text;
+      
+      const caseItem = document.getElementById("case").value;
+      const casePrice = caseData.find(c => c.name === caseItem).price;
+      const caseImage = caseData.find(c => c.name === caseItem).image;
+      
+      const psuWattage = document.getElementById("psu-wattage").textContent;
+      const psuPrice = currentConfig.psu;
+      
+      const cableExtensions = document.getElementById("cable-extensions").checked;
+      const extraFans = document.getElementById("extra-fans").checked;
+
+      // Create checkout item
+      const checkoutItem = [{
+        name: "Custom PC Build",
+        image: caseImage,
+        price: currentConfig.totalPrice + " SAR",
+        specs: [
+          `CPU: ${cpuModel} - ${cpuPrice} SAR`,
+          `Cooler: ${coolerText}`,
+          `Motherboard: ${moboModel} - ${moboPrice} SAR`,
+          `GPU: ${gpuModel} - ${gpuPrice} SAR`,
+          `RAM: ${ramText}`,
+          `SSD: ${ssdText}`,
+          `Case: ${caseItem} - ${casePrice} SAR`,
+          `PSU: ${psuWattage} - ${psuPrice} SAR`,
+          cableExtensions ? `Braided Cable Extensions: +150 SAR` : "",
+          extraFans ? `Extra Fans: +150 SAR` : ""
+        ].filter(item => item !== "")
+      }];
+
+      // Save to localStorage
+      localStorage.setItem('checkoutCart', JSON.stringify(checkoutItem));
+
+      // Redirect to checkout page
+      window.location.href = 'options/buy.html';
+    }
+
+    function toggleMenu() {
+      document.querySelector('.nav-container').classList.toggle('open');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById("cpu-model").addEventListener("change", function() {
+        currentConfig.cpuModel = this.value;
+        
+        const cpuBrand = document.getElementById("cpu-brand").value;
+        const cpuSocket = document.getElementById("cpu-socket").value;
+        if (cpuBrand && cpuSocket && this.value) {
+          const selectedCpu = cpuData[cpuBrand][cpuSocket].find(cpu => cpu.name === this.value);
+          document.getElementById("cpu-warning").textContent = selectedCpu.warning || "";
+          
+          if (cpuSocket === "lga1851") {
+            document.getElementById("cpu-warning").textContent = 
+              "⚠️ LGA 1851 platform is not recommended due to shitty performance";
+            document.getElementById("cpu-warning").style.color = "#ff5555";
+          }
+        } else {
+          document.getElementById("cpu-warning").textContent = "";
+        }
+        
+        updateCoolerOptions();
+        updatePsuAndTotalPrice();
+        validateSelections();
+      });
+      
+      document.getElementById("cooler").addEventListener("change", function() {
+        currentConfig.cooler = this.value;
+        updateCaseOptions();
+        updateTotalPrice();
+        validateSelections();
+      });
+      
+      document.getElementById("mobo-model").addEventListener("change", function() {
+        currentConfig.moboModel = this.value;
+        updatePsuAndTotalPrice();
+        validateSelections();
+      });
+      
+      document.getElementById("gpu-model").addEventListener("change", function() {
+        currentConfig.gpuModel = this.value;
+        updatePsuAndTotalPrice();
+        validateSelections();
+      });
+      
+      document.getElementById("ram").addEventListener("change", function() {
+        currentConfig.ram = this.value;
+        updatePsuAndTotalPrice();
+        validateSelections();
+      });
+      
+      document.getElementById("ssd").addEventListener("change", function() {
+        currentConfig.ssd = this.value;
+        updateTotalPrice();
+        validateSelections();
+      });
+      
+      document.getElementById("case").addEventListener("change", function() {
+        currentConfig.case = this.value;
+        updateTotalPrice();
+        validateSelections();
+      });
+      
+      document.getElementById("cable-extensions").addEventListener("change", function() {
+        currentConfig.cableExtensions = this.checked;
+        updateTotalPrice();
+      });
+      
+      document.getElementById("extra-fans").addEventListener("change", function() {
+        currentConfig.extraFans = this.checked;
+        updateTotalPrice();
+      });
+      
+      // Initialize button states
+      validateSelections();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #222222;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Navigation bar */
+    nav {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 20px 20px;
+      background-color: #121212;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      box-sizing: border-box;
+    }
+
+    /* Hamburger Menu Icon */
+    .hamburger-menu {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 20px;
+    }
+
+    .hamburger-menu div {
+      background-color: white;
+      height: 4px;
+      width: 100%;
+      border-radius: 5px;
+    }
+
+    /* Side menu */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 250px;
+      height: 100%;
+      background-color: #121212;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+      transform: translateX(100%);
+      transition: transform 0.3s ease-out;
+      padding: 30px;
+      will-change: transform;
+    }
+
+    .side-menu a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      font-size: 1.5rem;
+      margin: 20px 0;
+    }
+
+    .side-menu a:hover {
+      color: #ff6600;
+    }
+
+    .close-menu {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    .nav-container.open .side-menu {
+      transform: translateX(0);
+    }
+
+    /* Hero Section */
+    .hero {
+      background-image: url('https://via.placeholder.com/1600x800');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      padding: 80px 20px;
+    }
+
+    /* Checkout Container */
+    .checkout-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .order-summary {
+      flex: 1;
+      min-width: 300px;
+      background-color: #333;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .payment-form {
+      flex: 2;
+      min-width: 400px;
+      background-color: #333;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .order-items {
+      margin-top: 20px;
+    }
+
+    .order-item {
+      display: flex;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #555;
+    }
+
+    .order-item img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-right: 15px;
+    }
+
+    .order-item-details {
+      flex: 1;
+    }
+
+    .order-item-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #ff6600;
+    }
+
+    .order-item-specs {
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-bottom: 5px;
+    }
+
+    .order-item-price {
+      font-weight: bold;
+    }
+
+    .total-price {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-top: 20px;
+      text-align: right;
+      color: #ff6600;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #ddd;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px;
+      background-color: #444;
+      color: white;
+      border: 1px solid #555;
+      border-radius: 5px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 20px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    .field-group {
+      margin-bottom: 25px;
+      background-color: #3a3a3a;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #555;
+    }
+
+    .field-group h3 {
+      margin-top: 0;
+      color: #ff6600;
+    }
+
+    /* Payment Methods */
+    .payment-methods {
+      margin-top: 30px;
+    }
+
+    .payment-methods h3 {
+      color: #ff6600;
+    }
+
+    .payment-method {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #444;
+      transition: background-color 0.3s;
+    }
+
+    .payment-method:hover {
+      background-color: #555;
+    }
+
+    .payment-method input {
+      margin-right: 10px;
+    }
+
+    .payment-method label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .payment-icon {
+      width: 30px;
+      margin-right: 10px;
+    }
+
+    /* Shipping Notice */
+    .shipping-notice {
+      background-color: #333;
+      border-left: 4px solid #ff6600;
+      padding: 12px;
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
+
+    .shipping-notice p {
+      margin: 0;
+      color: #ddd;
+    }
+
+    /* Readonly Inputs */
+    input[readonly], select[readonly] {
+      background-color: #555 !important;
+      cursor: not-allowed;
+    }
+
+    /* Submit Button */
+    .submit-btn {
+      background-color: #ff6600;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      width: 100%;
+      margin-top: 20px;
+      transition: background-color 0.3s;
+    }
+
+    .submit-btn:hover {
+      background-color: #e65c00;
+    }
+
+    /* Footer Section */
+    footer {
+      background-color: #121212;
+      color: white;
+      text-align: center;
+      padding: 40px 0;
+      font-size: 1rem;
+      margin-top: auto;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #ff6600;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .checkout-container {
+        flex-direction: column;
+      }
+      
+      .order-summary, .payment-form {
+        min-width: 100%;
+      }
+
+      .form-row {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="nav-container">
+      <div class="hamburger-menu" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="side-menu">
+        <span class="close-menu" onclick="toggleMenu()">×</span>
+        <a href="../../index.html">Home</a>
+        <a href="menu/about-us.html">About Us</a>
+        <a href="cart.html">Cart</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <h1>Complete Your Purchase</h1>
+  </div>
+
+  <!-- Checkout Container -->
+  <div class="checkout-container">
+    <!-- Order Summary -->
+    <div class="order-summary">
+      <h2>Your Order</h2>
+      <div class="order-items" id="order-items">
+        <!-- Order items will be loaded here from localStorage -->
+      </div>
+      <div class="total-price">
+        Total: <span id="order-total">0 SAR</span>
+      </div>
+    </div>
+
+    <!-- Payment Form -->
+    <div class="payment-form">
+      <h2>Payment Information</h2>
+      <form id="payment-form">
+        <div class="field-group">
+          <h3>Card Details</h3>
+          <div class="form-group">
+            <label for="card-name">Name on Card</label>
+            <input type="text" id="card-name" required placeholder="John Smith">
+          </div>
+          
+          <div class="form-group">
+            <label for="card-number">Card Number</label>
+            <input type="text" id="card-number" required placeholder="1234 5678 9012 3456" maxlength="19">
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="card-expiry">Expiry Date (MM/YY)</label>
+              <input type="text" id="card-expiry" required placeholder="MM/YY" maxlength="5">
+            </div>
+            
+            <div class="form-group">
+              <label for="card-cvv">CVV</label>
+              <input type="text" id="card-cvv" required placeholder="123" maxlength="4">
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <h3>Billing Information</h3>
+          <div class="form-group">
+            <label for="billing-address">Address</label>
+            <input type="text" id="billing-address" required placeholder="Street Address">
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="billing-city">City</label>
+              <input type="text" id="billing-city" required value="Riyadh" readonly>
+            </div>
+            
+            <div class="form-group">
+              <label for="billing-zip">ZIP Code</label>
+              <input type="text" id="billing-zip" required placeholder="12345">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="billing-country">Country</label>
+            <input type="text" id="billing-country" required value="Saudi Arabia" readonly>
+          </div>
+        </div>
+
+        <div class="shipping-notice">
+          <p><strong>Note:</strong> We currently only ship to addresses within Riyadh, Saudi Arabia.</p>
+        </div>
+        
+        <div class="payment-methods">
+          <h3>Payment Method</h3>
+          <div class="payment-method">
+            <input type="radio" id="credit-card" name="payment-method" value="credit-card" checked>
+            <label for="credit-card">
+              <img src="https://cdn-icons-png.flaticon.com/512/196/196578.png" alt="Credit Card" class="payment-icon">
+              Credit Card
+            </label>
+          </div>
+          <div class="payment-method">
+            <input type="radio" id="mada" name="payment-method" value="mada">
+            <label for="mada">
+              <img src="https://seeklogo.com/images/M/mada-logo-323EDA7CC6-seeklogo.com.png" alt="Mada" class="payment-icon">
+              Mada
+            </label>
+          </div>
+          <div class="payment-method">
+            <input type="radio" id="stc-pay" name="payment-method" value="stc-pay">
+            <label for="stc-pay">
+              <img src="https://seeklogo.com/images/S/stc-pay-logo-1B4E546749-seeklogo.com.png" alt="STC Pay" class="payment-icon">
+              STC Pay
+            </label>
+          </div>
+        </div>
+        
+        <button type="submit" class="submit-btn">Complete Purchase</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <footer>
+    <p>&copy; 2025 Salloohs PCs. All rights reserved.</p>
+    <p><a href="privacy-policy.html">Privacy Policy</a> | <a href="terms-of-service.html">Terms of Service</a></p>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.querySelector('.nav-container').classList.toggle('open');
+    }
+
+    // Load and display the cart items
+    document.addEventListener('DOMContentLoaded', function() {
+      const checkoutCart = JSON.parse(localStorage.getItem('checkoutCart')) || [];
+      const orderItemsContainer = document.getElementById('order-items');
+      const orderTotalElement = document.getElementById('order-total');
+      let totalPrice = 0;
+
+      // Clear the order display before populating
+      orderItemsContainer.innerHTML = '';
+
+      if (checkoutCart.length === 0) {
+        orderItemsContainer.innerHTML = '<p>No items found in your order. Please return to the builder.</p>';
+        orderTotalElement.textContent = '0 SAR';
+        return;
+      }
+
+      // Display each item in the order
+      checkoutCart.forEach(item => {
+        const orderItemDiv = document.createElement('div');
+        orderItemDiv.classList.add('order-item');
+        
+        const itemHTML = `
+          <img src="${item.image}" alt="${item.name}">
+          <div class="order-item-details">
+            <div class="order-item-name">${item.name}</div>
+            <div class="order-item-specs">${item.specs.join('<br>')}</div>
+            <div class="order-item-price">${item.price}</div>
+          </div>
+        `;
+
+        orderItemDiv.innerHTML = itemHTML;
+        orderItemsContainer.appendChild(orderItemDiv);
+
+        // Calculate total price
+        const itemPrice = parseFloat(item.price.replace(' SAR', '').replace(',', ''));
+        totalPrice += itemPrice;
+      });
+
+      // Display total price
+      orderTotalElement.textContent = `${totalPrice} SAR`;
+
+      // Format card number as user types
+      document.getElementById('card-number').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\s+/g, ''); // Remove all spaces
+        if (value.length > 0) {
+          value = value.match(new RegExp('.{1,4}', 'g')).join(' '); // Add space every 4 digits
+        }
+        e.target.value = value;
+      });
+
+      // Format expiry date as MM/YY
+      document.getElementById('card-expiry').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+        if (value.length >= 2) {
+          value = value.substring(0, 2) + '/' + value.substring(2, 4);
+        }
+        e.target.value = value;
+      });
+
+      // Handle form submission
+      document.getElementById('payment-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const city = document.getElementById('billing-city').value;
+        if (city !== "Riyadh") {
+          alert('We currently only ship to addresses within Riyadh');
+          return;
+        }
+        
+        // Basic validation
+        const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+        let isValid = true;
+        
+        if (paymentMethod === 'credit-card' || paymentMethod === 'mada') {
+          const cardNumber = document.getElementById('card-number').value.replace(/\s+/g, '');
+          if (cardNumber.length < 16) {
+            alert('Please enter a valid 16-digit card number');
+            isValid = false;
+          }
+          
+          const expiry = document.getElementById('card-expiry').value;
+          if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+            alert('Please enter a valid expiry date in MM/YY format');
+            isValid = false;
+          }
+          
+          const cvv = document.getElementById('card-cvv').value;
+          if (cvv.length < 3) {
+            alert('Please enter a valid CVV');
+            isValid = false;
+          }
+        }
+        
+        if (!isValid) return;
+        
+        // In a real application, you would process payment here
+        alert(`Payment processed successfully via ${paymentMethod.toUpperCase()}! Your order will be shipped within Riyadh.`);
+        
+        // Clear the cart after successful purchase
+        localStorage.removeItem('cart');
+        localStorage.removeItem('checkoutCart');
+        
+        // Redirect to confirmation page (you would create this)
+        // window.location.href = 'confirmation.html';
+      });
+    });
+  </script>
+</body>
+</html>
