@@ -425,7 +425,6 @@
         am4: [
           { name: "Ryzen 5 5500", price: 500, hasStockCooler: true },
           { name: "Ryzen 5 5600x", price: 550, hasStockCooler: true },
-          { name: "Ryzen 7 5700x", price: 600 },
           { name: "Ryzen 7 5800x", price: 650 }
         ],
         am5: [
@@ -454,9 +453,9 @@
           { name: "i9 14900k", price: 2200, warning: "This CPU is not recommended due to instability issues" }
         ],
         "lga1700-ddr5": [
-          { name: "i3 12100f", price: 450 },
-          { name: "i5 12400f", price: 600 },
-          { name: "i5 14400f", price: 700 },
+          { name: "i3 12100f", price: 450, hasStockCooler: true },
+          { name: "i5 12400f", price: 600, hasStockCooler: true },
+          { name: "i5 14400f", price: 700, hasStockCooler: true },
           { name: "i5 14600k", price: 1200 },
           { name: "i7 14700k", price: 1800 },
           { name: "i9 14900k", price: 2200, warning: "This CPU is not recommended due to instability issues" }
@@ -732,7 +731,7 @@
       
       const midRangeCpus = [
         "i5 14600k", "Core Ultra 5 245k", "Ryzen 7 9800x3d", "Ryzen 7 9700x", 
-        "Ryzen 7800x3d", "Ryzen 7700x", "Ryzen 7 5800x", "Ryzen 7 5700x",
+        "Ryzen 7800x3d", "Ryzen 7700x", "Ryzen 7 5800x",
         "Ryzen 7 7700x"
       ];
       
