@@ -353,7 +353,10 @@
       displayCart();
     }
 
-    function startIncrement(index) {
+    function startIncrement(index, event) {
+      if (event) {
+        event.preventDefault();
+      }
       updateQuantity(index, getCurrentQuantity(index) + 1);
       intervalId = setTimeout(function repeatIncrement() {
         intervalId = setInterval(() => {
@@ -362,7 +365,10 @@
       }, repeatDelay);
     }
 
-    function startDecrement(index) {
+    function startDecrement(index, event) {
+      if (event) {
+        event.preventDefault();
+      }
       const current = getCurrentQuantity(index);
       if (current > 1) {
         updateQuantity(index, current - 1);
@@ -432,19 +438,17 @@
             </div>
             <div class="quantity-control">
               <div class="quantity-btn" 
-                   onclick="updateQuantity(${item.indices[0]}, ${item.quantity-1})" 
-                   ontouchstart="startDecrement(${item.indices[0]})"
+                   ontouchstart="startDecrement(${item.indices[0]}, event)"
                    ontouchend="clearInterval(intervalId)"
-                   onmousedown="startDecrement(${item.indices[0]})"
+                   onmousedown="startDecrement(${item.indices[0]}, event)"
                    onmouseup="clearInterval(intervalId)"
                    onmouseleave="clearInterval(intervalId)"
                    ${item.quantity <= 1 ? 'style="opacity:0.5;cursor:not-allowed;"' : ''}>-</div>
               <span class="quantity-display">${item.quantity}</span>
               <div class="quantity-btn" 
-                   onclick="updateQuantity(${item.indices[0]}, ${item.quantity+1})"
-                   ontouchstart="startIncrement(${item.indices[0]})"
+                   ontouchstart="startIncrement(${item.indices[0]}, event)"
                    ontouchend="clearInterval(intervalId)"
-                   onmousedown="startIncrement(${item.indices[0]})"
+                   onmousedown="startIncrement(${item.indices[0]}, event)"
                    onmouseup="clearInterval(intervalId)"
                    onmouseleave="clearInterval(intervalId)">+</div>
             </div>
